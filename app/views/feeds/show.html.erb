@@ -4,6 +4,23 @@
 <div class="infinite-tweets">
   <ul id="feed">
   </ul>
+
+  <script type="text/template" id="tweets-template">
+    <%% _(tweets).each(function (tweet) { %>
+      <li>
+        <%%= tweet.user.username %>:
+        <%%= tweet.content %>
+        <br>
+        Mentions:
+        <%% tweet.mentions.forEach(function (mention) { %>
+          <a href="/users/<%%=mention.user.id%>"><%%= mention.user.username %></a>
+        <%% }); %>
+        <br>
+        <%%= tweet.created_at %>
+      </li>
+    <%% }) %>
+  </script>
+
   <a href="javascript:void(0)" class="fetch-more">Fetch Tweets</a>
 </div>
 

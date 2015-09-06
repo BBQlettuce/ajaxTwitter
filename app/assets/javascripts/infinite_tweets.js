@@ -3,6 +3,7 @@
     this.$el = $(el);
     this.$feed = this.$el.find("#feed");
     this.maxCreatedAt = null;
+    this.tweetsTemplate = this.$el.find("#tweets-template").html();
     this.$el.on("click", ".fetch-more", this.fetchTweets.bind(this))
   };
 
@@ -15,7 +16,10 @@
       method: "get",
       dataType: "json",
       success: function(tweets) {
-        that.renderTweets(tweets);
+        that.insertTweets(tweets);
+        if (tweets.length > 0) {
+          that.maxCreatedAt = tweets[tweets.length - 1].created_at;
+        }
         if (tweets.length < 20) {
           that.$el.find(".fetch-more").replaceWith("<p>No more tweets!</p>");
         };
@@ -30,17 +34,19 @@
 
   };
 
-  $.InfiniteTweets.prototype.renderTweets = function (tweets) {
+  $.InfiniteTweets.prototype.insertTweets = function (tweets) {
     var that = this;
-    $(tweets).each(function (index, tweet) {
-      if (index === tweets.length - 1) {
-        that.maxCreatedAt = tweet.created_at;
-        console.log(tweet);
-        console.log(that);
-      }
-      var $li = $("<li>" + JSON.stringify(tweet) + "</li>");
-      that.$feed.append($li);
-    });
+    var tweetsTemplateParser = _.template(this.tweetsTemplate);
+    var renderedTweets = tweetsTemplateParser({ tweets: tweets });
+
+    this.$feed.append($(renderedTweets));
+    // $(tweets).each(function (index, tweet) {
+    //   if (index === tweets.length - 1) {
+    //     that.maxCreatedAt = tweet.created_at;
+    //   }
+    //   var $li = $("<li>" + JSON.stringify(tweet) + "</li>");
+    //   that.$feed.append($li);
+    // });
   };
 
 
