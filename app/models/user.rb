@@ -50,7 +50,7 @@ class User < ActiveRecord::Base
       .uniq
 
     unless max_created_at.nil?
-      @tweets = @tweets.where("tweets.created_at > ?", max_created_at)
+      @tweets = @tweets.where("tweets.created_at < ?", max_created_at)
     end
     # TODO: How can we use limit/max_created_at here??
 

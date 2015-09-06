@@ -33,7 +33,7 @@
   $.InfiniteTweets.prototype.renderTweets = function (tweets) {
     var that = this;
     $(tweets).each(function (index, tweet) {
-      if (index === 0) {
+      if (index === tweets.length - 1) {
         that.maxCreatedAt = tweet.created_at;
         console.log(tweet);
         console.log(that);
