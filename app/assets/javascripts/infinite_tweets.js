@@ -6,29 +6,41 @@
     this.$el.on("click", ".fetch-more", this.fetchTweets.bind(this))
   };
 
-  $.InfiniteTweets.prototype.fetchTweets = function () {
-    // var maxCreatedAt;
-    // if (this.maxCreatedAt !== null) {
-    //   maxCreatedAt
-    // }
+  $.InfiniteTweets.prototype.fetchTweets = function (e) {
+    e.preventDefault();
+    var that = this;
 
-    $.ajax({
+    var ajaxOptions = {
       url: "/feed",
       method: "get",
-      // data: maxCreatedAt;
       dataType: "json",
-      success: function (tweets) {
-        this.renderTweets(tweets);
-      }.bind(this)
-    })
+      success: function(tweets) {
+        that.renderTweets(tweets);
+        if (tweets.length < 20) {
+          that.$el.find(".fetch-more").replaceWith("<p>No more tweets!</p>");
+        };
+      }
+    };
+
+    if (this.maxCreatedAt !== null) {
+      ajaxOptions.data = { max_created_at: this.maxCreatedAt };
+    };
+
+    $.ajax(ajaxOptions);
+
   };
 
   $.InfiniteTweets.prototype.renderTweets = function (tweets) {
-    // console.log(tweets);
+    var that = this;
     $(tweets).each(function (index, tweet) {
+      if (index === 0) {
+        that.maxCreatedAt = tweet.created_at;
+        console.log(tweet);
+        console.log(that);
+      }
       var $li = $("<li>" + JSON.stringify(tweet) + "</li>");
-      this.$feed.append($li)
-    }.bind(this))
+      that.$feed.append($li);
+    });
   };
 
 
