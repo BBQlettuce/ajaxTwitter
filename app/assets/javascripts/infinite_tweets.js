@@ -56,8 +56,11 @@
     var tweetsTemplateParser = _.template(this.tweetsTemplate);
     var renderedTweet = tweetsTemplateParser({ tweets: [tweet] });
 
-    this.maxCreatedAt = tweet.created_at;
     this.$feed.prepend($(renderedTweet));
+
+    if (this.maxCreatedAt === null){
+      this.maxCreatedAt = tweet.created_at;
+    }
   }
 
   $.fn.infiniteTweets = function () {
