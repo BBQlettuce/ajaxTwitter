@@ -4,7 +4,9 @@
     this.$feed = this.$el.find("#feed");
     this.maxCreatedAt = null;
     this.tweetsTemplate = this.$el.find("#tweets-template").html();
-    this.$el.on("click", ".fetch-more", this.fetchTweets.bind(this))
+
+    this.$el.on("click", ".fetch-more", this.fetchTweets.bind(this));
+    this.$el.on("insert-tweet", this.insertTweet.bind(this));
   };
 
   $.InfiniteTweets.prototype.fetchTweets = function (e) {
@@ -49,6 +51,14 @@
     // });
   };
 
+  $.InfiniteTweets.prototype.insertTweet = function (e, tweet) {
+    var that = this;
+    var tweetsTemplateParser = _.template(this.tweetsTemplate);
+    var renderedTweet = tweetsTemplateParser({ tweets: [tweet] });
+
+    this.maxCreatedAt = tweet.created_at;
+    this.$feed.prepend($(renderedTweet));
+  }
 
   $.fn.infiniteTweets = function () {
     return this.each(function () {

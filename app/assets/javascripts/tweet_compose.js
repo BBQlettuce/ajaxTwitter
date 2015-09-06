@@ -32,10 +32,13 @@
   }
 
   $.TweetCompose.prototype.submit = function (e) {
-
     e.preventDefault();
+
     var inputs = $(e.currentTarget).serializeJSON();
+    //console.log(inputs);
     this.$el.find(":input").prop("disabled", true);
+
+    // this.$feed.trigger("insert-tweet", ["insert-tweet", inputs]);
 
     $.ajax({
       url: "/tweets",
@@ -49,8 +52,10 @@
   };
 
   $.TweetCompose.prototype.handleSuccess = function (tweet) {
-    var $li = $("<li>" + JSON.stringify(tweet) + "</li>")
-    this.$feed.prepend($li);
+    this.$feed.trigger("insert-tweet", tweet);
+
+    // var $li = $("<li>" + JSON.stringify(tweet) + "</li>")
+    // this.$feed.prepend($li);
     this.clearInput();
     this.$el.find(":input").prop("disabled", false);
   };
